@@ -4,6 +4,8 @@ go 1.19
 
 require (
 	github.com/cloudflare/circl v0.0.0-00010101000000-000000000000
+	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20221104135756-97bc4ad4a1cb
+	google.golang.org/grpc v1.52.0
 	google.golang.org/protobuf v1.28.1
 )
 
@@ -20,9 +22,7 @@ require (
 	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 	golang.zx2c4.com/wireguard v0.0.0-20220920152132-bb719d3a6e2c // indirect
-	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20221104135756-97bc4ad4a1cb // indirect
 	google.golang.org/genproto v0.0.0-20221118155620-16455021b5e6 // indirect
-	google.golang.org/grpc v1.52.0 // indirect
 )
 
-replace github.com/cloudflare/circl => github.com/octeep/circl v0.0.0-20221209095330-9dbf4684a331
+replace github.com/cloudflare/circl => github.com/octeep/circl v0.0.0-20221014150430-c5636498298b
