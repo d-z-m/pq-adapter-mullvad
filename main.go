@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"time"
 	"encoding/base64"
 	"errors"
 	"fmt"
 	"log"
 	"pq-adapter-mullvad/grpcapi"
-
+	"time"
 
 	"github.com/cloudflare/circl/kem/mceliece/mceliece460896f"
 
@@ -20,7 +19,7 @@ import (
 )
 
 // bytes needed to store mceliece460896(f) ciphertext
-const CRYPTO_CIPHERTEXTBYTES int = 188;
+const CRYPTO_CIPHERTEXTBYTES int = 188
 
 // tuncfg server IP:port
 const TUNCFG_ADDRESS = "10.64.0.1:1337"
@@ -41,7 +40,7 @@ func main() {
 	}
 
 	if len(devices) != 1 {
-		log.Fatal(errors.New("Error: this tool expects only 1 wireguard device to be present...found " + fmt.Sprintf("%d",len(devices))))
+		log.Fatal(errors.New("Error: this tool expects only 1 wireguard device to be present...found " + fmt.Sprintf("%d", len(devices))))
 	}
 	pqUpgrade(TUNCFG_ADDRESS, devices[0].PublicKey)
 }
@@ -83,7 +82,6 @@ func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
 	   }
 	*/
 
-
 	conn, err := grpc.Dial(TUNCFG_ADDRESS, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
@@ -91,7 +89,7 @@ func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
 	defer conn.Close()
 	qc := grpcapi.NewPostQuantumSecureClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second * 5)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
 	mePubkeyBytes, err := mePubkey.MarshalBinary()
@@ -113,14 +111,13 @@ func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
 	}
 	fmt.Println("livin x2")
 
-
 	if len(pskResponse.Ciphertexts) != 1 {
-		log.Fatal("Error! expected 1 ciphertext. got " + fmt.Sprintf("%d",len(pskResponse.Ciphertexts)))
+		log.Fatal("Error! expected 1 ciphertext. got " + fmt.Sprintf("%d", len(pskResponse.Ciphertexts)))
 	}
 	meCiphertext := pskResponse.Ciphertexts[0]
 
 	if len(meCiphertext) != CRYPTO_CIPHERTEXTBYTES {
-		log.Fatal("Error! expected ciphertext of length " + fmt.Sprintf("%d", CRYPTO_CIPHERTEXTBYTES) + "but got one of length " + fmt.Sprintf("%d",len(meCiphertext)))
+		log.Fatal("Error! expected ciphertext of length " + fmt.Sprintf("%d", CRYPTO_CIPHERTEXTBYTES) + "but got one of length " + fmt.Sprintf("%d", len(meCiphertext)))
 	}
 
 	ss, err := me.Decapsulate(mePrivkey, meCiphertext)
@@ -133,10 +130,7 @@ func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
 	fmt.Println("New Private Key: " + base64.StdEncoding.EncodeToString(wgPskPrivkey[:]))
 	fmt.Println("Assoc. Preshared key: " + base64.StdEncoding.EncodeToString(ss))
 
-
-
 }
-
 
 func xorAssign(dst, src []byte) {
 	if len(src) > len(dst) {
@@ -146,7 +140,6 @@ func xorAssign(dst, src []byte) {
 		src[i] ^= dst[i]
 	}
 }
-
 
 /* SPDX-License-Identifier: Apache-2.0
    Copyright 2019 Awn Umar <awn@spacetime.dev>
