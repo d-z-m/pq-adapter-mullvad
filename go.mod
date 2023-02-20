@@ -1,4 +1,4 @@
-module pq-adapter-mullvad
+module golang.unexpl0.red/pq-adapter-mullvad
 
 go 1.19
 
