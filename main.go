@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"pq-adapter-mullvad/grpcapi"
+	"golang.unexpl0.red/pq-adapter-mullvad/grpcapi"
 	"time"
 
 	"github.com/cloudflare/circl/kem/mceliece/mceliece460896f"
