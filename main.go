@@ -6,8 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"golang.unexpl0.red/pq-adapter-mullvad/grpcapi"
 	"time"
+
+	"golang.unexpl0.red/pq-adapter-mullvad/grpcapi"
 
 	"github.com/cloudflare/circl/kem/mceliece/mceliece460896f"
 
@@ -46,11 +47,10 @@ func main() {
 }
 
 func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
-
 	me := mceliece460896f.Scheme()
 
 	fmt.Println(me.Name())
-	//generate keypair
+	// generate keypair
 	mePubkey, mePrivkey, err := me.GenerateKeyPair()
 	if err != nil {
 		log.Fatal(err)
@@ -100,7 +100,7 @@ func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
 	pskResponse, err := qc.PskExchangeExperimentalV1(ctx, &grpcapi.PskRequestExperimentalV1{
 		WgPubkey:    wgpubkey[:],
 		WgPskPubkey: wgPskPubkey[:],
-		KemPubkeys: []*grpcapi.KemPubkeyExperimentalV1{&grpcapi.KemPubkeyExperimentalV1{
+		KemPubkeys: []*grpcapi.KemPubkeyExperimentalV1{{
 			AlgorithmName: MCELIECE_VARIANT,
 			KeyData:       mePubkeyBytes,
 		}},
@@ -121,7 +121,6 @@ func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
 	}
 
 	ss, err := me.Decapsulate(mePrivkey, meCiphertext)
-
 	if err != nil {
 		fmt.Println("i ded x3")
 		log.Fatal(err)
@@ -129,14 +128,13 @@ func pqUpgrade(tuncfgAddress string, wgpubkey wgtypes.Key) {
 
 	fmt.Println("New Private Key: " + base64.StdEncoding.EncodeToString(wgPskPrivkey[:]))
 	fmt.Println("Assoc. Preshared key: " + base64.StdEncoding.EncodeToString(ss))
-
 }
 
 func xorAssign(dst, src []byte) {
 	if len(src) > len(dst) {
 		log.Fatal(errors.New("Error xoring key material!"))
 	}
-	for i, _ := range src {
+	for i := range src {
 		src[i] ^= dst[i]
 	}
 }
